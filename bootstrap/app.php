@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureSuperAdmin;
+use App\Http\Middleware\EnsureTeahcer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'super_admin' => EnsureSuperAdmin::class,
+        ]);
+
+        $middleware->alias([
+            'teacher' => EnsureTeahcer::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

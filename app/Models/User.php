@@ -26,6 +26,9 @@ class User extends Authenticatable
         'role'
     ];
 
+    public function tasks(){
+        return $this->hasMany(Task::class,'teacher_id');
+    }
 
 
     /**
