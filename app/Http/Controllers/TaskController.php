@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classes;
 use App\Models\Task;
+use App\Models\User;
+ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use PhpParser\Builder\Class_;
 
 class TaskController extends Controller
 {
@@ -20,27 +24,40 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request , Classes $class)
     {
-        // if(!Auth::check()||Auth::user()->role !=='teacher'){
-        //     return response()->json(['message' => 'Unauthorized'],403);
-        // }
+        $user = Auth::user();
+
+
+            // if (!$class) {
+            //     return response()->json(['message' => 'الكلاس غير موجود'], 404);
+            // }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'file' => 'nullable|file|mimes:pdf,doc,docs|max:2048',
+            'subject_id' => 'required|exists:subjects,subject_id',
+            'class_id' => 'required|exists:classes,id',
+
         ]);
+
+        $class = Classes::find($request->class_id);
+
 
         $filepath = null;
         if($request->hasFile('file')){
             $filepath = $request->file('file')->store('tasks','public');
         }
 
+
         $tasks =Task::create([
             'teacher_id' => auth()->user()->id,
             'title' => $request->title,
             'description' => $request->description,
             'file_path' => $filepath,
+            // 'subject_id' => $request->subject_id,
+            'class_id' => $request->class_id,
         ]);
         return response()->json($tasks,201);
     }
@@ -76,6 +93,7 @@ class TaskController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'file_path' => $filepath,
+
         ]);
 
         return response()->json(['message' => 'Task updated successfully','task' => $task]);

@@ -23,11 +23,19 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
     ];
 
     public function tasks(){
         return $this->hasMany(Task::class,'teacher_id');
+    }
+
+    public function subjects(){
+        return $this->belongsToMany(Subject::class,'teacher_subjects','teacher_id','subject_id');
+    }
+
+    public function classes (){
+        return $this->hasmany(Classes::class,'teacher_id');
     }
 
 

@@ -30,4 +30,14 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+    public function assignSubject(Request $request,$teacherId){
+        $request->validate([
+            'subject_id' => 'required|exists:subjects,subject_id'
+        ]);
+
+        $teacher = User::findOrFail($teacherId);
+        $teacher->subjects()->syncWithoutDetaching([$request->subject_id]);
+        return response()->json(["message"=> "The teacher is linked to thee subject"]);
+    }
 }
