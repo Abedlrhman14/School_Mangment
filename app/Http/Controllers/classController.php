@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classes;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Builder\Class_;
@@ -16,6 +17,7 @@ class classController extends Controller
     {
 
         $classes = Auth::user()->classes;
+        // $classes = $user->classes()->with('grade')->withPivot('role')->get();
         return response()->json($classes);
     }
 
@@ -25,11 +27,14 @@ class classController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
+            'grade_name'=>'required|string|exists:grades,name'
         ]);
+        $grade = Grade::where('name', $request->grade_name)->first();
         $class = Classes::create([
             'name'=> $request ->name,
             'teacher_id'=> Auth::id(),
+            'grade_id'=>$request->grade_id,
         ]);
         return response()->json($class,201);
     }

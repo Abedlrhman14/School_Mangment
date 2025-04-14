@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\classController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\EnsureTeahcer;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +33,9 @@ Route::middleware('auth:api')->group(function(){
     Route::put('/classes/{class}', [ClassController::class, 'update'])->middleware(EnsureTeahcer::class);
     Route::post('/classes/{class}/students', [ClassController::class, 'addStudent'])->middleware(EnsureTeahcer::class);
     Route::delete('/classes/{class}', [ClassController::class, 'destroy'])->middleware(EnsureTeahcer::class);
-    // Route::post('/classes/{class}/tasks', [TaskController::class, 'store'])->middleware(EnsureTeahcer::class);
-
+    Route::get('/grades',[GradeController::class,'index']);
+    Route::post('/grades',[GradeController::class,'store'])->middleware(EnsureTeahcer::class);
+    Route::delete('/grades/{id}',[GradeController::class,'destroy'])->middleware(EnsureTeahcer::class);
 });
 
 
