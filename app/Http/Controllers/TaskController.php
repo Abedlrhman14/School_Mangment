@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\Task;
 use App\Models\User;
- use Illuminate\Support\Facades\DB;
+use App\Notifications\NewTaskNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use PhpParser\Builder\Class_;
@@ -59,6 +60,12 @@ class TaskController extends Controller
             // 'subject_id' => $request->subject_id,
             'class_id' => $request->class_id,
         ]);
+        // send natification
+        $Students = $class->users()->where('class_user.role','student')->get();
+        foreach($Students as $student){
+            $student->notify(new NewTaskNotification($tasks));
+        }
+
         return response()->json($tasks,201);
     }
 
@@ -112,4 +119,6 @@ class TaskController extends Controller
 
         return response()->json(['message'=>'Task deleted successfully']);
     }
+
+
 }

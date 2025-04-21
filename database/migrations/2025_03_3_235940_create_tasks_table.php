@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            // $table->string('subject_id')->nullable();
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade'); // for teacher
-            // $table->foreignId('subject_id')->constrained('subject_id')->onDelete('cascade'); // for subject
             $table->foreignId('class_id')->constrained('classes')->onDelete('cascade'); // for class
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('file_path')->nullable();  //for files
-            // $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }

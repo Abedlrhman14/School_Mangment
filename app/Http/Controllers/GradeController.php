@@ -11,7 +11,6 @@ class GradeController extends Controller
         $grdaes=Grade::all();
         return response()->json($grdaes);
     }
-
     public function store(Request $request){
         $request->validate([
             'name'=>'required|string|max:255',

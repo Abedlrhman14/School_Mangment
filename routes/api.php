@@ -37,17 +37,3 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/grades',[GradeController::class,'store'])->middleware(EnsureTeahcer::class);
     Route::delete('/grades/{id}',[GradeController::class,'destroy'])->middleware(EnsureTeahcer::class);
 });
-
-
-
-
-// Routes للكلاسات مع Middleware للـ Authentication
-// Route::middleware('auth:api')->group(function () {
-//          // عرض كل الكلاسات للمدرس
-//             // إنشاء كلاس جديد
-//     // عرض تفاصيل كلاس معين
-//       // تحديث كلاس
-//     Route::delete('/classes/{class}', [ClassController::class, 'destroy']); // حذف كلاس
-//     Route::post('/classes/{class}/students', [ClassController::class, 'addStudents']); // إضافة طلاب للكلاس
-//     Route::get('/student/classes', [ClassController::class, 'studentClasses']); // عرض الكلاسات الخاصة بالطالب
-// });
