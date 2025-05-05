@@ -15,12 +15,9 @@ class classController extends Controller
      */
     public function index(Classes $class)
     {
-
         $classes = Auth::user()->classes;
-        // $classes = $user->classes()->with('grade')->withPivot('role')->get();
         return response()->json($classes);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -28,7 +25,7 @@ class classController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'grade_name'=>'required|string|exists:grades,name'
+            'grade_id'=>'required|string|exists:grades,id'
         ]);
         $grade = Grade::where('name', $request->grade_name)->first();
         $class = Classes::create([
@@ -84,5 +81,18 @@ class classController extends Controller
      public function studentClasses(){
         $classes = Auth::user()->enrolledClasses;
         return response()->json($classes);
+     }
+     public function search(Request $request){
+        $query = $request->query('q'); //search by name
+        $grade_id = $request->query('grade_id'); //search by grade id
+        $classes = Classes::query()->when($query , function ($q) use ($query){
+            return $q->where('name' , 'LIKE' , "%{$query}%");
+        })
+        ->when($grade_id, function ($q) use ($grade_id) {
+            return $q->where('grade_id',$grade_id);
+        })
+        ->with(['grade','teacher'])
+        ->get();
+        return response()->json($classes , 200);
      }
 }

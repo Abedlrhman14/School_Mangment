@@ -28,4 +28,12 @@ class GradeController extends Controller
         $grade->delete();
         return response()->json(['message'=>'Grade deleted successfully']);
     }
+    public function search(Request $request){
+        $query = $request->query('q'); //search by name
+        if(!$query){
+            return response()->json(Grade::all(),200);
+        }
+        $grades =Grade::where('name','LIKE',"%{$query}%")->get();
+        return response()->json($grades,200);
+    }
 }

@@ -36,4 +36,6 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/grades',[GradeController::class,'index']);
     Route::post('/grades',[GradeController::class,'store'])->middleware(EnsureTeahcer::class);
     Route::delete('/grades/{id}',[GradeController::class,'destroy'])->middleware(EnsureTeahcer::class);
+    Route::get('/grades/search',[GradeController::class,'search']);
+    Route::get('/class/search',[ClassController::class,'search']);
 });
