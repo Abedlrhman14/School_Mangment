@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\classController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\ProfileContoller;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureSuperAdmin;
@@ -38,4 +39,6 @@ Route::middleware('auth:api')->group(function(){
     Route::delete('/grades/{id}',[GradeController::class,'destroy'])->middleware(EnsureTeahcer::class);
     Route::get('/grades/search',[GradeController::class,'search']);
     Route::get('/class/search',[ClassController::class,'search']);
+    Route::get('/profile',[ProfileContoller::class,'show']);
+    Route::put('/profile/password',[ProfileContoller::class,'changePassword']);
 });
