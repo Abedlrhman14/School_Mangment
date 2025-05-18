@@ -41,4 +41,6 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/class/search',[ClassController::class,'search']);
     Route::get('/profile',[ProfileContoller::class,'show']);
     Route::put('/profile/password',[ProfileContoller::class,'changePassword']);
+    Route::get('/tasks/{task}/download', [TaskController::class, 'downloadTask']);
+    Route::get('/tasks/{task}/download-book', [TaskController::class, 'downloadBook']);
 });

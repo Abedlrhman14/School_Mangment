@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('file_path')->nullable();  //for files
+            $table->string('book_path')->nullable();  //for books
             $table->timestamps();
         });
     }
