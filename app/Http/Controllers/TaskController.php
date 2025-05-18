@@ -90,8 +90,8 @@ class TaskController extends Controller
            $filepath =$request->file('book')->store('tasks','public');
         }
         $task->update([
-            'title' => $request->title,
-            'description' => $request->description,
+            // 'title' => $request->title,
+            // 'description' => $request->description,
             'file_path' => $filepath,
             'book_path' => $bookpath,
         ]);
