@@ -14,9 +14,7 @@ class UserController extends Controller
 {
     public function UpdateRole(Request $request,$userID){
 
-        // if(!Auth::check()||Auth::user()->role !=='super_admin'){
-        //     return response()->json(['message' => 'Unauthorized'],403);
-        // }
+
         $request -> validate([
             'role' => 'required|in:student,teacher'
         ]);
@@ -39,5 +37,19 @@ class UserController extends Controller
         $teacher = User::findOrFail($teacherId);
         $teacher->subjects()->syncWithoutDetaching([$request->subject_id]);
         return response()->json(["message"=> "The teacher is linked to thee subject"]);
+    }
+    public function showStudents(){
+        $user = User::where('role','student')->get()->all();
+        return response()->json([
+            'status' => 1,
+            'data' => $user
+        ],200);
+    }
+    public function showStudentDetailes(User $id){
+        $user = User::where('role' , 'student')->get()->first();
+        return response()->json([
+            'status' => 1,
+            'data' => $id->load('studentClasses'),
+        ],200);
     }
 }

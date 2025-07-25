@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use App\Models\Grade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Builder\Class_;
 
 class classController extends Controller
@@ -68,15 +70,38 @@ class classController extends Controller
 
     }
      public function addStudent(Request $request,Classes $class){
-        $request->validate([
-            'student_id'=> 'required',
-            // 'student_id.*'=> 'exists::users,id,role,student',
+        $Validator = Validator::make($request->all(),[
+                 'student_email'=> 'required',
+                 'student_email.*'=> 'exists:users,email',
         ]);
 
-        $class->students()->sync($request->student_id);
+        $emails = is_array($request->student_email) ? $request->student_email : [$request->student_email];
+          $studentIds = User::whereIn('email',$emails)
+                      ->pluck('id')
+                      ->toArray();
+        $class->students()->syncWithoutDetaching($studentIds);
         $class->load('students');
+         if($Validator->fails() ){
+            return response()->json([
+                'message' => 'somethins wrong',
+                'errors' => $Validator->errors(),
+            ],404);
+        }
+        if (empty($studentIds)) {
+        return response()->json([
+            'message' => 'No students found with the provided email',
+            'errors' => ['student_email' => ['The email does not exist .']]
+        ], 422);
+    }
+    if($class->students()->where('student_id', $studentIds)->exists()){
+        return response()->json([
+            'message' => 'the student alredy exist',
+            'student_email' => $emails
+        ],201);
+    }
         return response()->json($class);
      }
+
 
      public function studentClasses(){
         $classes = Auth::user()->enrolledClasses;
@@ -94,5 +119,11 @@ class classController extends Controller
         ->with(['grade','teacher'])
         ->get();
         return response()->json($classes , 200);
+     }
+     public function showClassDeteils(Classes $classId){
+        return response()->json([
+            'status' => 1,
+            'data' => $classId->load('students','tasks','grade')
+        ],200);
      }
 }

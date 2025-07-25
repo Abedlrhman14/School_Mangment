@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'imge',
     ];
 
     public function tasks(){
@@ -36,6 +37,9 @@ class User extends Authenticatable
 
     public function classes (){
         return $this->hasmany(Classes::class,'teacher_id');
+    }
+    public function studentClasses(){
+        return $this->belongsToMany(Classes::class, 'class_student', 'student_id', 'class_id');
     }
 
 

@@ -24,16 +24,16 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request , Classes $class)
+    public function store(Request $request , Classes $id)
     {
         $user = Auth::user();
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docs|max:2048',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'book' => 'nullable|file|mimes:pdf,doc,docs|max:2048',
             // 'subject_id' => 'required|exists:subjects,subject_id',
-            'class_id' => 'required|exists:classes,id',
+            // 'class_id' => 'required|exists:classes,id',
         ]);
 
         $class = Classes::find($request->class_id);
@@ -52,7 +52,7 @@ class TaskController extends Controller
             'file_path' => $filepath,
             'book_path' => $bookpath,
             // 'subject_id' => $request->subject_id,
-            'class_id' => $request->class_id,
+            'class_id' => $id->id,
         ]);
         return response()->json($tasks,201);
     }

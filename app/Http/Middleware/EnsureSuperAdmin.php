@@ -25,3 +25,4 @@ class EnsureSuperAdmin
         return $next($request);
     }
 }
+    
